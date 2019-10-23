@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>jktoiuhito</Authors>
+    <Description>A Swiss Army Knife package of helper classes and methods found to be useful in a multitude of projects</Description>
+    <Copyright>Public domain</Copyright>
+    <PackageTags>Helper;Extension;String;JSON;HATEOAS</PackageTags>
+    <PackageProjectUrl>https://github.com/jktoiuhito/jktoiuhito.Utility</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jktoiuhito/jktoiuhito.Utility</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
+    <PackageReleaseNotes>First release, containing String and Json extensions and HATEOAS-related classes</PackageReleaseNotes>
+  </PropertyGroup>
+
+</Project>
