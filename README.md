@@ -1,5 +1,6 @@
 # jktoiuhito.Utility
 [![Build status](https://ci.appveyor.com/api/projects/status/y8hmn87hrh9mt1kc?svg=true)](https://ci.appveyor.com/project/jktoiuhito/jktoiuhito-utility)
+[![CodeFactor](https://www.codefactor.io/repository/github/jktoiuhito/utility/badge)](https://www.codefactor.io/repository/github/jktoiuhito/utility)
 [![Nuget](https://img.shields.io/nuget/v/jktoiuhito.Utility)](https://www.nuget.org/packages/jktoiuhito.Utility/)
 
 This is a collection of helper classes and methods I've found to be useful in other projects.
@@ -20,9 +21,7 @@ Via package-manager console
 
 Here are usage instructions for every method and class per package.
 
-### jtkoiuhito.Utility.Extensions
-
-#### Json
+### jtkoiuhito.Utility.Extensions.Json
 
 JSON-related extensions using System.Runtime.Serialization.Json.DataContractJsonSerializer.
 
@@ -37,7 +36,7 @@ MyDataObject obj = str.FromJson<MyDataObject>();
 MyDataObject obj = stream.FromJson<MyDataObject>();
 ```
 
-#### String
+### jtkoiuhito.Utility.Extensions.String
 
 String-extensions related to emptiness and whitespace checks and related exceptions.
 
