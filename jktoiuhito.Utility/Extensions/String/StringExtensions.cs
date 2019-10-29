@@ -3,6 +3,9 @@ using System;
 
 namespace jktoiuhito.Utility.Extensions.String
 {
+    /// <summary>
+    /// Extensions related to <see cref="string"/>s.
+    /// </summary>
     public static class StringExtensions
     {
         const string ExceptionMessage = "cannot be empty or whitespace";

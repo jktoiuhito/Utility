@@ -6,6 +6,10 @@ using System;
 
 namespace jktoiuhito.Utility.Extensions.Json
 {
+    /// <summary>
+    /// Extensions for easy JSON (de)serialization using
+    /// the <see cref="DataContractJsonSerializer"/>.
+    /// </summary>
     public static class JsonExtensions
     {
         const string EmptyStream = "stream cannot be empty";

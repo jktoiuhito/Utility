@@ -2,15 +2,13 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/y8hmn87hrh9mt1kc?svg=true)](https://ci.appveyor.com/project/jktoiuhito/jktoiuhito-utility)
 [![Nuget](https://img.shields.io/nuget/v/jktoiuhito.Utility)](https://www.nuget.org/packages/jktoiuhito.Utility/)
 
-This is a collection of helper classes and methods I've found to be useful in other projects. The project is developed on the principle of zero external dependencies, so that it could be used on maximal amount of other projects.
+This is a collection of helper classes and methods I've found to be useful in other projects.
 
 ## Requirements
 
 Main package: .NET Standard 2.0
 
 Tests: .NET Core 3.0
-
-Support for .NET Standard 2.1 will be added when Azure starts supporting .NET Core 3.0
 
 ## Installation
 
@@ -68,16 +66,38 @@ HateoasLink link = HateoasLink.Self("https://www.example.com");
 HateoasLink link = HateoasLink.Self(new Uri("https://www.example.com"));
 ```
 
-The `HateoasResponse`-class can be used as a base-class for all responses containing HATEOAS-links, or used on its own if the response should only contain HATEOAS-links.
+The `HateoasResponse`-class can be used on its own if the response should only contain HATEOAS-links.
 
 ```csharp
-class DataObject : HateoasResponse
+IEnumerable<HateoasLink> links = new[]
 {
-    //This class contains a collection of HateoasLinks, and one own value.
-    
+    new HateoasLink("https://www.example.com/", "example")
+};
+
+//Create a response which only contains HATEOAS-links
+HateoasResponse response = new HateoasResponse(links);
+```
+
+The `response` above would be serialized as following:
+
+```json
+{
+  "links":
+  [
+    { "href":"https://www.example.com/", "rel":"example" }
+  ]
+}
+``` 
+
+`HateoasResponse` can also be used as a base-class for a response containing data along with the HATEOAS-links.
+
+```csharp
+//Extend HateoasResponse to add custom data to responses
+class MyResponse : HateoasResponse
+{
     public readonly string Value;
     
-    public DataObject (string value, IEnumerable<HateoasLink> links) : base(links)
+    public MyResponse (string value, IEnumerable<HateoasLink> links) : base(links)
     {
         Value = value;
     }
@@ -88,38 +108,28 @@ IEnumerable<HateoasLink> links = new[]
     new HateoasLink("https://www.example.com/", "example")
 };
 
-//Create a response which only contains HATEOAS-links
-HateoasResponse response = new HateoasResponse(links);
-
-//Create a DataObject which contains HateoasLinks and an own value
-DataObject = new DataObject("hello world!", links)
+MyResponse response = new MyResponse("hello world!", links)
 ```
 
-The responses above would be serialized as following:
+The `response` above would be serialized as following:
 
 ```json
 {
+  "Value":"hello world!",
   "links":
   [
     { "href":"https://www.example.com/", "rel":"example" }
   ]
 }
+```
 
-{
-  "Value":"hello world!"
-  "links":
-  [
-    { "href":"https://www.example.com/", "rel":"example" }
-  ]
-}
-``` 
-
-The `HateoasLinkWrapper` is a generic class which contains HateoasLinks and an object. It can be used, for example, to neatly serialize HATEOAS-links common to all elements of a collection by wrapping the collection in the `HateoasLinkWrapper`.
+The `HateoasLinkWrapper` is a class which contains HateoasLinks and content.
+It can be used, for example, to neatly serialize HATEOAS-links common to all elements of a collection by wrapping the collection in the `HateoasLinkWrapper`.
 
 ```csharp
-var content = new List<DataObject>
+var content = new List<MyResponse>
 {
-    //Each individual DataObject is created and given its own HateoasLinks
+    //Each individual MyResponse is created and given its own HateoasLinks
 };
 
 var commonLinks = new List<HateoasLink>
@@ -134,5 +144,14 @@ var response = new HateoasLinkWrapper<SerializableObject>(content, commonLinks);
 The response above would be serialized as following:
 
 ```json
-TODO!
+{
+  "content":
+  {
+    "":"todo!"
+  },
+  "links":
+  [
+    { "":"todo!" }
+  ]
+}
 ```

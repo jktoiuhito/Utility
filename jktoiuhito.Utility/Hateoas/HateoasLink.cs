@@ -8,12 +8,29 @@ namespace jktoiuhito.Utility.Hateoas
     /// A link with a relevancy, used in dynamic
     /// service discovery in RESTful API's.
     /// </summary>
-    [DataContract(Name = LinkSerializedName)]
+    [DataContract(Name = SerializedName)]
     public sealed class HateoasLink
     {
-        public const string LinkSerializedName = "link";
-        public const string LinkHrefSerializedName = "href";
-        public const string LinkRelSerializedName = "rel";
+        /// <summary>
+        /// Name of a serialized <see cref="HateoasLink"/>.
+        /// </summary>
+        public const string SerializedName = "link";
+
+        /// <summary>
+        /// Name of a serialized <see cref="HateoasLink"/>s <see cref="Href"/>.
+        /// </summary>
+        public const string HrefSerializedName = "href";
+
+        /// <summary>
+        /// Name of a serialized <see cref="HateoasLink"/>s <see cref="Rel"/>.
+        /// </summary>
+        public const string RelSerializedName = "rel";
+
+        /// <summary>
+        /// Value of the serialized <see cref="HateoasLink"/>s
+        /// <see cref="Rel"/> when the link is created with 
+        /// <see cref="Self(Uri)"/> or <see cref="Self(string)"/>.
+        /// </summary>
         public const string RelSelf = "self";
 
         /// <summary>
@@ -21,7 +38,7 @@ namespace jktoiuhito.Utility.Hateoas
         /// Is never null.
         /// </summary>
         [DataMember(
-            Name = LinkHrefSerializedName, IsRequired = true, Order = 1)]
+            Name = HrefSerializedName, IsRequired = true, Order = 1)]
         public Uri Href { get; private set; }
 
         /// <summary>
@@ -29,7 +46,7 @@ namespace jktoiuhito.Utility.Hateoas
         /// Is never null, empty or whitespace.
         /// </summary>
         [DataMember(
-            Name = LinkRelSerializedName, IsRequired = true, Order = 2)]
+            Name = RelSerializedName, IsRequired = true, Order = 2)]
         public string Rel { get; private set; }
 
         /// <param name="href">

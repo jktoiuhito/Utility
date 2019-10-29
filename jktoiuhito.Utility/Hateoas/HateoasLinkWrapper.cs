@@ -7,21 +7,41 @@ namespace jktoiuhito.Utility.Hateoas
     /// <summary>
     /// A serializable class which contains an object and HATEOAS-links.
     /// </summary>
-    /// <typeparam name="T">Type of the contained object.</typeparam>
     [DataContract]
-    public sealed class HateoasLinkWrapper<T> : HateoasResponse where T : class
+    public sealed class HateoasLinkWrapper : HateoasResponse
     {
+        /// <summary>
+        /// Name of the serialized <see cref="HateoasLinkWrapper"/>s
+        /// <see cref="Content"/>.
+        /// </summary>
         public const string ContentSerializedName = "content";
 
         /// <summary>
-        /// Object contained in the <see cref="HateoasLinkWrapper{T}"/>.
+        /// Object contained in the <see cref="HateoasLinkWrapper"/>.
         /// Is never null.
         /// </summary>
         [DataMember(Name = ContentSerializedName)]
-        public T Content { get; private set; }
+        public object Content { get; private set; }
 
+        /// <summary>
+        /// Create a new <see cref="HateoasLinkWrapper"/>.
+        /// </summary>
+        /// <param name="content">
+        ///     Content of the <see cref="HateoasLinkWrapper"/>.
+        /// </param>
+        /// <param name="links">
+        ///     <see cref="HateoasLink"/>s of 
+        ///     the <see cref="HateoasLinkWrapper"/>.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="content"/> is null.
+        ///     <paramref name="links"/> is null.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="links"/> is empty or contains nulls.
+        /// </exception>
         public HateoasLinkWrapper (
-            T content, IEnumerable<HateoasLink> links) : base(links)
+            object content, IEnumerable<HateoasLink> links) : base(links)
         {
             Content =
                 content ?? throw new ArgumentNullException(nameof(content));
