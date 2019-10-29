@@ -19,8 +19,6 @@ Via package-manager console:
 
 ## Usage
 
-Here are usage instructions for every method and class per package.
-
 ### jtkoiuhito.Utility.Extensions.Json
 
 JSON-related extensions using `System.Runtime.Serialization.Json.DataContractJsonSerializer`.
