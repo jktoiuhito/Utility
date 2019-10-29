@@ -1,5 +1,5 @@
 # jktoiuhito.Utility
-[![Build status](https://ci.appveyor.com/api/projects/status/y8hmn87hrh9mt1kc?svg=true)](https://ci.appveyor.com/project/jktoiuhito/jktoiuhito-utility)
+[![Build status](https://ci.appveyor.com/api/projects/status/7cg11bch374b866h?svg=true)](https://ci.appveyor.com/project/jktoiuhito/utility)
 [![CodeFactor](https://www.codefactor.io/repository/github/jktoiuhito/utility/badge)](https://www.codefactor.io/repository/github/jktoiuhito/utility)
 [![Nuget](https://img.shields.io/nuget/v/jktoiuhito.Utility)](https://www.nuget.org/packages/jktoiuhito.Utility/)
 
