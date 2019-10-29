@@ -82,8 +82,14 @@ The `response` above would be serialized as following:
 {
   "links":
   [
-    { "href":"https://www.example.com/", "rel":"home" },
-    { "href":"https://www.example.com/examples", "rel":"examples" }
+    {
+      "href":"https://www.example.com/",
+      "rel":"home"
+    },
+    {
+      "href":"https://www.example.com/examples",
+      "rel":"examples"
+    }
   ]
 }
 ``` 
@@ -147,8 +153,8 @@ var content = new List<MyResponse>
 var commonLinks = new List<HateoasLink>
 {
     //HateoasLinks common to all the elements in the collection are created here.
-    { "href":"https://www.example.com/", "rel":"home" },
-    { "href":"https://www.example.com/examples", "rel":"examples" }
+    new HateoasLink("https://www.example.com/", "home"),
+    new HateoasLink("https://www.example.com/examples", "examples")
 };
 
 //The elements and the common links are brought together.
