@@ -1,5 +1,5 @@
 # jktoiuhito.Utility
-[![Build status](https://ci.appveyor.com/api/projects/status/y8hmn87hrh9mt1kc?svg=true)](https://ci.appveyor.com/project/jktoiuhito/jktoiuhito-utility)
+[![Build status](https://ci.appveyor.com/api/projects/status/7cg11bch374b866h?svg=true)](https://ci.appveyor.com/project/jktoiuhito/utility)
 [![CodeFactor](https://www.codefactor.io/repository/github/jktoiuhito/utility/badge)](https://www.codefactor.io/repository/github/jktoiuhito/utility)
 [![Nuget](https://img.shields.io/nuget/v/jktoiuhito.Utility)](https://www.nuget.org/packages/jktoiuhito.Utility/)
 
@@ -7,23 +7,21 @@ This is a collection of helper classes and methods I've found to be useful in ot
 
 ## Requirements
 
-Main package: .NET Standard 2.0
+.NET Standard 2.0
 
-Tests: .NET Core 3.0
+Tests require .NET Core 3.0
 
 ## Installation
 
-Via package-manager console
+Via package-manager console:
 
 `Install-Package jktoiuhito.Utility`
 
 ## Usage
 
-Here are usage instructions for every method and class per package.
-
 ### jtkoiuhito.Utility.Extensions.Json
 
-JSON-related extensions using System.Runtime.Serialization.Json.DataContractJsonSerializer.
+JSON-related extensions using `System.Runtime.Serialization.Json.DataContractJsonSerializer`.
 
 ```csharp
 //Serialize an object to JSON formatted string.
@@ -38,7 +36,7 @@ MyDataObject obj = stream.FromJson<MyDataObject>();
 
 ### jtkoiuhito.Utility.Extensions.String
 
-String-extensions related to emptiness and whitespace checks and related exceptions.
+String extension related to nullness, emptiness and whitespace checks and related exceptions.
 
 ```csharp
 //Check that a string is not null, empty or whitespace, and throw a fitting exception if it is.
@@ -49,7 +47,7 @@ string checkedString = inputString.NotNullEmptyWhitespace();
 
 ### jktoiuhito.Utility.Hateoas
 
-Classes for making HATEOAS-links easy to operate on.
+Classes for making HATEOAS-links easier to work with.
 
 ```csharp
 //Create a new HATEOAS-link with a href from a string and rel of "example"
@@ -70,7 +68,8 @@ The `HateoasResponse`-class can be used on its own if the response should only c
 ```csharp
 IEnumerable<HateoasLink> links = new[]
 {
-    new HateoasLink("https://www.example.com/", "example")
+    new HateoasLink("https://www.example.com/", "home"),
+    new HateoasLink("https://www.example.com/examples", "examples")
 };
 
 //Create a response which only contains HATEOAS-links
@@ -83,7 +82,14 @@ The `response` above would be serialized as following:
 {
   "links":
   [
-    { "href":"https://www.example.com/", "rel":"example" }
+    {
+      "href":"https://www.example.com/",
+      "rel":"home"
+    },
+    {
+      "href":"https://www.example.com/examples",
+      "rel":"examples"
+    }
   ]
 }
 ``` 
@@ -104,7 +110,9 @@ class MyResponse : HateoasResponse
 
 IEnumerable<HateoasLink> links = new[]
 {
-    new HateoasLink("https://www.example.com/", "example")
+    new HateoasLink("https://www.example.com/", "home"),
+    new HateoasLink("https://www.example.com/examples", "examples"),
+    HateoasLink.Self("https://www.example.com/examples/1")
 };
 
 MyResponse response = new MyResponse("hello world!", links)
@@ -117,7 +125,18 @@ The `response` above would be serialized as following:
   "Value":"hello world!",
   "links":
   [
-    { "href":"https://www.example.com/", "rel":"example" }
+    {
+      "href":"https://www.example.com/",
+      "rel":"home"
+    },
+    {
+      "href":"https://www.example.com/examples",
+      "rel":"examples"
+    },
+    {
+      "href":"https://www.example.com/examples/1",
+      "rel":"self"
+    }
   ]
 }
 ```
@@ -128,12 +147,14 @@ It can be used, for example, to neatly serialize HATEOAS-links common to all ele
 ```csharp
 var content = new List<MyResponse>
 {
-    //Each individual MyResponse is created and given its own HateoasLinks
+    //Each individual MyResponse is created and given its own HateoasLinks (omitted for brevity).
 };
 
 var commonLinks = new List<HateoasLink>
 {
-    //HateoasLinks common to all the elements in the collection are created here
+    //HateoasLinks common to all the elements in the collection are created here.
+    new HateoasLink("https://www.example.com/", "home"),
+    new HateoasLink("https://www.example.com/examples", "examples")
 };
 
 //The elements and the common links are brought together.
@@ -145,12 +166,38 @@ The response above would be serialized as following:
 ```json
 {
   "content":
-  {
-    "":"todo!"
-  },
+  [
+    {
+      "Value":"myValue",
+      "links":
+      [
+        {
+          "href":"https://www.example.com/examples/1",
+          "rel":"self"
+        }
+      ]
+    },
+    {
+      "Value":"myOtherValue",
+      "links":
+      [
+        {
+          "href":"https://www.example.com/examples/2",
+          "rel":"self"
+        }
+      ]
+    }
+  ],
   "links":
   [
-    { "":"todo!" }
+    {
+      "href":"https://www.example.com/",
+      "rel":"home"
+    },
+    {
+      "href":"https://www.example.com/examples",
+      "rel":"examples"
+    }
   ]
 }
 ```
