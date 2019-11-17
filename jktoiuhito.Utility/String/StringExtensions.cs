@@ -1,20 +1,23 @@
-﻿using System.Threading.Tasks;
-using System;
+﻿using System;
 
-namespace jktoiuhito.Utility.Extensions.String
+//EDITED 2019-11-17
+namespace jktoiuhito.Utility.String
 {
     /// <summary>
     /// Extensions related to <see cref="string"/>s.
     /// </summary>
     public static class StringExtensions
     {
-        const string ExceptionMessage = "cannot be empty or whitespace";
+        const string ExceptionMessage = "String cannot be empty or whitespace";
 
         /// <summary>
-        /// Check that a <see cref="string"/> is not null, empty or
-        /// consists only of whitespace.
+        ///     Return the input <see cref="string"/> if it is not null,
+        ///     not empty and does not only consist of whitespace.
+        ///     Otherwise throws an exception.
         /// </summary>
-        /// <param name="input"><see cref="string"/> to test.</param>
+        /// <param name="input">
+        ///     <see cref="string"/> to test.
+        /// </param>
         /// <param name="localName">
         ///     Name of the <see cref="string"/> variable in the local context.
         /// </param>

@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <Version>2.0.0</Version>
-    <PackageReleaseNotes>Included XML comments and made HateoasLinkWrapper non-generic.</PackageReleaseNotes>
+    <Version>3.0.0</Version>
+    <PackageReleaseNotes>Added option to use indentation with object.ToJson. Added IEnumerable.NotNullEmpty. Simplified String and Json namespaces. Added missing documentation.</PackageReleaseNotes>
     <Authors>jktoiuhito</Authors>
     <Description>A Swiss Army Knife package of helper classes and methods found to be useful in a multitude of projects</Description>
     <Copyright>Public domain</Copyright>

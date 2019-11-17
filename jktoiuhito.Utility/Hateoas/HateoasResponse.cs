@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
+//EDITED 2019-11-17
 namespace jktoiuhito.Utility.Hateoas
 {
     /// <summary>
@@ -12,19 +13,18 @@ namespace jktoiuhito.Utility.Hateoas
     public class HateoasResponse
     {
         /// <summary>
-        /// Name of <see cref="Links"/> when serialized
-        /// by <see cref="DataContractSerializer"/>.
+        /// Name of the serialized <see cref="Links"/>.
         /// </summary>
         public const string LinksSerializedName = "links";
 
-        const string EmptyExceptionMessage = "cannot be empty";
-        const string NullsExceptionMessage = "cannot contain nulls";
+        const string EmptyLinksExceptionMessage = "Links cannot be empty";
+        const string LinksNullsExceptionMessage = "Links cannot contain nulls";
 
         /// <summary>
         /// <see cref="HateoasLink"/>s contained in the response.
         /// Is never null or empty.
         /// </summary>
-        [DataMember(Name = LinksSerializedName, IsRequired = true)]
+        [DataMember(Name = LinksSerializedName, IsRequired = true, Order = 999)]
         public IEnumerable<HateoasLink> Links { get; private set; }
 
         /// <param name="links">
@@ -42,10 +42,10 @@ namespace jktoiuhito.Utility.Hateoas
                 throw new ArgumentNullException(nameof(links));
             if (links.Count() <= 0)
                 throw new ArgumentException(
-                    EmptyExceptionMessage, nameof(links));
+                    EmptyLinksExceptionMessage, nameof(links));
             if (links.Where(l => l == null).Count() > 0)
                 throw new ArgumentException(
-                    NullsExceptionMessage, nameof(links));
+                    LinksNullsExceptionMessage, nameof(links));
             Links = links;
         }
     }

@@ -1,14 +1,15 @@
 ﻿using jktoiuhito.Utility.Hateoas;
+using jktoiuhito.Utility.Json;
 using System;
 using Xunit;
 
 #pragma warning disable IDE0007 // Use implicit type
 namespace jktoiuhito.Utility.UnitTests.Hateoas
 {
-    //DONE 2019-10-05
+    //EDITED 2019-11-17
     public sealed class HateoasLinkUnitTests
     {
-        #region Constructors
+        #region HateoasLink (String, String)
 
         [Fact]
         public void HateoasLink_NullStringHref_ThrowsException ()
@@ -20,10 +21,12 @@ namespace jktoiuhito.Utility.UnitTests.Hateoas
                 () => new HateoasLink(href, rel));
         }
 
-        [Fact]
-        public void HateoasLink_EmptyStringHref_ThrowsException ()
+        [Theory]
+        [InlineData("")]
+        [InlineData("   ")]
+        [InlineData("not-an-uri")]
+        public void HateoasLink_NonUriStringHref_ThrowsException (string href)
         {
-            string href = "";
             string rel = "rel";
 
             _ = Assert.Throws<UriFormatException>(
@@ -31,67 +34,29 @@ namespace jktoiuhito.Utility.UnitTests.Hateoas
         }
 
         [Fact]
-        public void HateoasLink_WhitespaceStringHref_ThrowsException ()
+        public void HateoasLink_StringHref_NullRel_ThrowsException ()
         {
-            string href = "     ";
-            string rel = "rel";
-
-            _ = Assert.Throws<UriFormatException>(
-                () => new HateoasLink(href, rel));
-        }
-
-        [Fact]
-        public void HateoasLink_NonUriStringHref_ThrowsException ()
-        {
-            string href = "not-an-uri";
-            string rel = "rel";
-
-            _ = Assert.Throws<UriFormatException>(
-                () => new HateoasLink(href, rel));
-        }
-
-        [Fact]
-        public void HateoasLink_NullUriHref_ThrowsException ()
-        {
-            Uri href = null;
-            string rel = "rel";
-
-            _ = Assert.Throws<ArgumentNullException>(
-                () => new HateoasLink(href, rel));
-        }
-
-        [Fact]
-        public void HateoasLink_NullRel_ThrowsException ()
-        {
-            Uri href = new Uri("https://www.example.com/");
+            string href = "https://www.example.com/";
             string rel = null;
 
             _ = Assert.Throws<ArgumentNullException>(
                 () => new HateoasLink(href, rel));
         }
 
-        [Fact]
-        public void HateoasLink_EmptyRel_ThrowsException ()
+        [Theory]
+        [InlineData("")]
+        [InlineData("   ")]
+        public void HateoasLink_StringHref_EmptyWHitespaceRel_ThrowsException (
+            string rel)
         {
-            Uri href = new Uri("https://www.example.com/");
-            string rel = "";
+            string href = "https://www.example.com/";
 
             _ = Assert.Throws<ArgumentException>(
                 () => new HateoasLink(href, rel));
         }
 
         [Fact]
-        public void HateoasLink_WhitespaceRel_ThrowsException ()
-        {
-            Uri href = new Uri("https://www.example.com/");
-            string rel = "";
-
-            _ = Assert.Throws<ArgumentException>(
-                () => new HateoasLink(href, rel));
-        }
-
-        [Fact]
-        public void HateoasLink_StringHref_AcceptsString ()
+        public void HateoasLink_StringHref_HrefAcceptsString ()
         {
             string href = new Uri("https://www.example.com/").AbsoluteUri;
             string rel = "rel";
@@ -102,7 +67,54 @@ namespace jktoiuhito.Utility.UnitTests.Hateoas
         }
 
         [Fact]
-        public void HateoasLink_UriHref_AcceptsUri ()
+        public void HateoasLink_StringHref_RelAcceptsString ()
+        {
+            string href = "https://www.example.com/";
+            string rel = "rel";
+
+            var link = new HateoasLink(href, rel);
+
+            Assert.Equal(rel, link.Rel);
+        }
+
+        #endregion
+
+        #region HateoasLink (Uri, String)
+
+        [Fact]
+        public void HateoasLink_NullUriref_ThrowsException ()
+        {
+            Uri href = null;
+            string rel = "rel";
+
+            _ = Assert.Throws<ArgumentNullException>(
+                () => new HateoasLink(href, rel));
+        }
+
+        [Fact]
+        public void HateoasLink_UriHref_NullRel_ThrowsException ()
+        {
+            Uri href = new Uri("https://www.example.com/");
+            string rel = null;
+
+            _ = Assert.Throws<ArgumentNullException>(
+                () => new HateoasLink(href, rel));
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("   ")]
+        public void HateoasLink_UriHref_EmptyWHitespaceRel_ThrowsException (
+            string rel)
+        {
+            Uri href = new Uri("https://www.example.com/");
+
+            _ = Assert.Throws<ArgumentException>(
+                () => new HateoasLink(href, rel));
+        }
+
+        [Fact]
+        public void HateoasLink_UriHref_HrefAcceptsUri ()
         {
             Uri href = new Uri("https://www.example.com/");
             string rel = "rel";
@@ -113,7 +125,7 @@ namespace jktoiuhito.Utility.UnitTests.Hateoas
         }
 
         [Fact]
-        public void HateoasLink_Rel_AcceptsString ()
+        public void HateoasLink_UriHref_RelAcceptsString ()
         {
             Uri href = new Uri("https://www.example.com/");
             string rel = "rel";
@@ -125,10 +137,55 @@ namespace jktoiuhito.Utility.UnitTests.Hateoas
 
         #endregion
 
-        #region Self
+        #region HateoasLink.Self (String)
 
         [Fact]
-        public void HateoasLink_Self_NullUri_ThrowsException ()
+        public void HateoasLink_StringSelf_NullHref_ThrowsException ()
+        {
+            string href = null;
+
+            _ = Assert.Throws<ArgumentNullException>(
+                () => HateoasLink.Self(href));
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("   ")]
+        [InlineData("not-an-uri")]
+        public void HateoasLink_StringSelf_NonUriHref_ThrowsException (
+            string href)
+        {
+            _ = Assert.Throws<UriFormatException>(
+                () => HateoasLink.Self(href));
+        }
+
+        [Fact]
+        public void HateoasLink_StringSelf_SetsHref ()
+        {
+            string href = "https://www.example.com/";
+
+            var link = HateoasLink.Self(href);
+
+            Assert.Equal(href, link.Href.AbsoluteUri);
+        }
+
+        [Fact]
+        public void HateoasLink_StringSelf_RelIsSelf ()
+        {
+            string href = "https://www.example.com/";
+            const string self = "self";
+
+            var link = HateoasLink.Self(href);
+
+            Assert.Equal(self, link.Rel);
+        }
+
+        #endregion
+
+        #region HateoasLink.Self (Uri)
+
+        [Fact]
+        public void HateoasLink_UriSelf_NullHref_ThrowsException ()
         {
             Uri href = null;
 
@@ -137,34 +194,7 @@ namespace jktoiuhito.Utility.UnitTests.Hateoas
         }
 
         [Fact]
-        public void HateoasLink_Self_NullString_ThrowsException ()
-        {
-            string href = null;
-
-            _ = Assert.Throws<ArgumentNullException>(
-                () => HateoasLink.Self(href));
-        }
-
-        [Fact]
-        public void HateoasLink_Self_EmptyString_ThrowsException ()
-        {
-            string href = "";
-
-            _ = Assert.Throws<UriFormatException>(
-                () => HateoasLink.Self(href));
-        }
-
-        [Fact]
-        public void HateoasLink_Self_WhitespaceString_ThrowsException ()
-        {
-            string href = "    ";
-
-            _ = Assert.Throws<UriFormatException>(
-                () => HateoasLink.Self(href));
-        }
-
-        [Fact]
-        public void HateoasLink_Self_UriHref_SetsUri ()
+        public void HateoasLink_UriSelf_SetsHref ()
         {
             Uri href = new Uri("https://www.example.com/");
 
@@ -174,7 +204,7 @@ namespace jktoiuhito.Utility.UnitTests.Hateoas
         }
 
         [Fact]
-        public void HateoasLink_Self_UriHref_RelIsSelf ()
+        public void HateoasLink_UriSelf_RelIsSelf ()
         {
             Uri href = new Uri("https://www.example.com/");
             const string self = "self";
@@ -184,25 +214,39 @@ namespace jktoiuhito.Utility.UnitTests.Hateoas
             Assert.Equal(self, link.Rel);
         }
 
-        [Fact]
-        public void HateoasLink_Self_StringHref_SetsUri ()
+        #endregion
+
+        #region Serialized forms
+
+        [Theory]
+        [InlineData("https://www.example.com", "rlvncy", "href")]
+        [InlineData("https://www.example.com", "rlvncy", "rel")]
+        [InlineData(
+            "https://www.example.com", "rlvncy", "https:\\/\\/www.example.com")]
+        [InlineData("https://www.example.com", "rlvncy", "rlvncy")]
+        public void HateoasLink_SerializedJson_ContainsNecessaryData (
+            string href, string rel, string contains)
         {
-            string href = new Uri("https://www.example.com/").AbsoluteUri;
+            var link = new HateoasLink(href, rel);
 
-            var link = HateoasLink.Self(href);
+            var serialized = link.ToJson();
 
-            Assert.Equal(href, link.Href.AbsoluteUri);
+            Assert.Contains(contains, serialized);
         }
 
-        [Fact]
-        public void HateoasLink_Self_StringHref_RelIsSelf ()
+        [Theory]
+        [InlineData("https://www.example.com", "href")]
+        [InlineData("https://www.example.com", "rel")]
+        [InlineData("https://www.example.com", "https:\\/\\/www.example.com")]
+        [InlineData("https://www.example.com", "self")]
+        public void HateoasLink_Self_SerializedJson_ContainsNecessaryData (
+            string href, string contains)
         {
-            string href = new Uri("https://www.example.com/").AbsoluteUri;
-            const string self = "self";
-
             var link = HateoasLink.Self(href);
 
-            Assert.Equal(self, link.Rel);
+            var serialized = link.ToJson();
+
+            Assert.Contains(contains, serialized);
         }
 
         #endregion

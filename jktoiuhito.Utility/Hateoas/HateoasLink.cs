@@ -1,7 +1,8 @@
-﻿using jktoiuhito.Utility.Extensions.String;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
+using jktoiuhito.Utility.String;
 using System;
 
+//EDITED 2019-11-17
 namespace jktoiuhito.Utility.Hateoas
 {
     /// <summary>
@@ -89,13 +90,15 @@ namespace jktoiuhito.Utility.Hateoas
         }
 
         /// <summary>
-        /// Create a new <see cref="HateoasLink"/> with the
-        /// relevancy of <see cref="RelSelf"/>
+        ///     Create a new <see cref="HateoasLink"/> with the
+        ///     relevancy of <see cref="RelSelf"/>
         /// </summary>
         /// <param name="href">
         ///     <see cref="Uri"/> the <see cref="HateoasLink"/> points to.
         /// </param>
-        /// <returns>A new <see cref="HateoasLink"/>.</returns>
+        /// <returns>
+        ///     A new <see cref="HateoasLink"/>.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="href"/> is null.
         /// </exception>
@@ -103,13 +106,15 @@ namespace jktoiuhito.Utility.Hateoas
             new HateoasLink(href, RelSelf);
 
         /// <summary>
-        /// Create a new <see cref="HateoasLink"/> with the
-        /// relevancy of <see cref="RelSelf"/>
+        ///     Create a new <see cref="HateoasLink"/> with the
+        ///     relevancy of <see cref="RelSelf"/>
         /// </summary>
         /// <param name="href">
         ///     <see cref="Uri"/> the <see cref="HateoasLink"/> points to.
         /// </param>
-        /// <returns>A new <see cref="HateoasLink"/>.</returns>
+        /// <returns>
+        ///     A new <see cref="HateoasLink"/>.
+        /// </returns>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="href"/> is null.
         /// </exception>

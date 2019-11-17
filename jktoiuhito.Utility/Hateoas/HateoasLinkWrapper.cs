@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System;
 
+//EDITED 2019-11-17
 namespace jktoiuhito.Utility.Hateoas
 {
     /// <summary>
-    /// A serializable class which contains an object and HATEOAS-links.
+    /// A <see cref="HateoasResponse"/> which also
+    /// contains an <see cref="object"/>.
     /// </summary>
     [DataContract]
     public sealed class HateoasLinkWrapper : HateoasResponse
@@ -24,7 +26,7 @@ namespace jktoiuhito.Utility.Hateoas
         public object Content { get; private set; }
 
         /// <summary>
-        /// Create a new <see cref="HateoasLinkWrapper"/>.
+        ///     Create a new <see cref="HateoasLinkWrapper"/>.
         /// </summary>
         /// <param name="content">
         ///     Content of the <see cref="HateoasLinkWrapper"/>.

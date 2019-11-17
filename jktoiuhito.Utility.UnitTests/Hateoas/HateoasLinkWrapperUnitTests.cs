@@ -1,12 +1,13 @@
 ﻿using jktoiuhito.Utility.Hateoas;
 using System.Collections.Generic;
+using jktoiuhito.Utility.Json;
 using System;
 using Xunit;
 
 #pragma warning disable IDE0007 // Use implicit type
 namespace jktoiuhito.Utility.UnitTests.Hateoas
 {
-    //DONE 2019-10-29
+    //EDITED 2019-11-17
     public sealed class HateoasLinkWrapperUnitTests
     {
         #region Constructor
@@ -20,6 +21,7 @@ namespace jktoiuhito.Utility.UnitTests.Hateoas
                 {
                     new HateoasLink("https://www.example.com/", "rel")
                 };
+
             _ = Assert.Throws<ArgumentNullException>(
                 () => new HateoasLinkWrapper(content, links));
         }
@@ -34,9 +36,9 @@ namespace jktoiuhito.Utility.UnitTests.Hateoas
                     new HateoasLink("https://www.example.com/", "rel")
                 };
 
-            var wrapped = new HateoasLinkWrapper(content, links);
+            var wrapper = new HateoasLinkWrapper(content, links);
 
-            Assert.Equal(content, wrapped.Content);
+            Assert.Equal(content, wrapper.Content);
         }
 
         [Fact]
@@ -59,6 +61,7 @@ namespace jktoiuhito.Utility.UnitTests.Hateoas
         {
             string content = "string";
             IEnumerable<HateoasLink> links = null;
+
             _ = Assert.Throws<ArgumentNullException>(
                 () => new HateoasLinkWrapper(content, links));
         }
@@ -97,14 +100,40 @@ namespace jktoiuhito.Utility.UnitTests.Hateoas
                     new HateoasLink("https://www.example.com/", "rel")
                 };
 
-            var wrapped = new HateoasLinkWrapper(content, links);
+            var wrapper = new HateoasLinkWrapper(content, links);
 
-            Assert.Equal(links, wrapped.Links);
+            Assert.Equal(links, wrapper.Links);
         }
 
         #endregion
 
-        //TODO: test that serialized form is correct?
+        #region JSON Serialized form
+
+        [Theory]
+        [InlineData("cont1", "https://www.example.com", "rel1", "content")]
+        [InlineData("cont1", "https://www.example.com", "rel1", "cont1")]
+        [InlineData
+            ("cont1",
+            "https://www.example.com",
+            "rel1",
+            "https:\\/\\/www.example.com")]
+        [InlineData("cont1", "https://www.example.com", "rel1", "rel1")]
+        public void HateoasLinkWrapper_SerializedJson_ContainsNecessaryData (
+            string content, string uri, string rel, string contains)
+        {
+            IEnumerable<HateoasLink> links =
+                new[]
+                {
+                    new HateoasLink(uri, rel)
+                };
+            var wrapper = new HateoasLinkWrapper(content, links);
+
+            var serialized = wrapper.ToJson();
+
+            Assert.Contains(contains, serialized);
+        }
+
+        #endregion
     }
 }
 #pragma warning restore IDE0007

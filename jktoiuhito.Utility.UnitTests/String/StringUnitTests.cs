@@ -1,13 +1,15 @@
-﻿using jktoiuhito.Utility.Extensions.String;
+﻿using jktoiuhito.Utility.String;
 using System;
 using Xunit;
 
 #pragma warning disable IDE0007 // Use implicit type
-namespace jktoiuhito.Utility.UnitTests.Extensions.String
+namespace jktoiuhito.Utility.UnitTests.String
 {
-    //DONE 2019-10-05
+    //EDITED 2019-11-17
     public sealed class StringUnitTests
     {
+        #region NotNullEmptyWhitespace (string)
+
         [Fact]
         public void NotNullEmptyWhitespace_Null_ThrowsException ()
         {
@@ -36,7 +38,32 @@ namespace jktoiuhito.Utility.UnitTests.Extensions.String
         }
 
         [Fact]
-        public void NotNullEmptyWhitespace_EmptyLocalName_ThrowsException ()
+        public void NotNullEmptyWhitespace_String_Passes ()
+        {
+            string input = "input";
+
+            string output = input.NotNullEmptyWhitespace();
+
+            Assert.Equal(input, output);
+        }
+
+        #endregion
+
+        #region NotNullEmptyWhitespace (string, string)
+
+        [Fact]
+        public void NotNullEmptyWhitespace_NullLocalName_Passes ()
+        {
+            string input = "input";
+            string localName = null;
+
+            string output = input.NotNullEmptyWhitespace(localName);
+
+            Assert.Equal(input, output);
+        }
+
+        [Fact]
+        public void NotNullEmptyWhitespace_EmptyWhitesLocalName_ThrowsException ()
         {
             string input = "input";
             string localName = "";
@@ -56,26 +83,7 @@ namespace jktoiuhito.Utility.UnitTests.Extensions.String
                 () => input.NotNullEmptyWhitespace(localName));
         }
 
-        [Fact]
-        public void NotNullEmptyWhitespace_String_Passes ()
-        {
-            string input = "input";
-
-            string output = input.NotNullEmptyWhitespace();
-
-            Assert.Equal(input, output);
-        }
-
-        [Fact]
-        public void NotNullEmptyWhitespace_NullLocalName_Passes ()
-        {
-            string input = "input";
-            string localName = null;
-
-            string output = input.NotNullEmptyWhitespace(localName);
-
-            Assert.Equal(input, output);
-        }
+        #endregion
     }
 }
 #pragma warning restore IDE0007

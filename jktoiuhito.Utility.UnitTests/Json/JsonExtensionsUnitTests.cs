@@ -1,14 +1,14 @@
-﻿using jktoiuhito.Utility.Extensions.Json;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
+using jktoiuhito.Utility.Json;
 using System.Text;
 using System.IO;
 using System;
 using Xunit;
 
 #pragma warning disable IDE0007 // Use implicit type
-namespace jktoiuhito.Utility.UnitTests.Extensions.Json
+namespace jktoiuhito.Utility.UnitTests.Json
 {
-    //DONE 2019-10-07
+    //EDITED 2019-11-17
     public sealed class JsonExtensionsUnitTests
     {
         #region ToJson
@@ -17,6 +17,7 @@ namespace jktoiuhito.Utility.UnitTests.Extensions.Json
         public void ToJson_Null_ThrowsException ()
         {
             DataContractClass original = null;
+            
             _ = Assert.Throws<ArgumentNullException>(
                 () => JsonExtensions.ToJson(original));
         }
@@ -26,6 +27,7 @@ namespace jktoiuhito.Utility.UnitTests.Extensions.Json
         {
             var name = "name";
             NonDataContractClass original = new NonDataContractClass(name);
+            
             _ = Assert.Throws<InvalidDataContractException>(
                 () => JsonExtensions.ToJson(original));
         }
@@ -34,6 +36,7 @@ namespace jktoiuhito.Utility.UnitTests.Extensions.Json
         public void ToJson_String_ReturnsDeserializableString ()
         {
             string original = "name";
+            
             string serialized = original.ToJson();
             string deserialized = serialized.FromJson<string>();
 
@@ -45,11 +48,115 @@ namespace jktoiuhito.Utility.UnitTests.Extensions.Json
         {
             string name = "name";
             DataContractClass original = new DataContractClass(name);
+            
             string serialized = original.ToJson();
             DataContractClass deserialized = 
                 serialized.FromJson<DataContractClass>();
 
             Assert.Equal(original, deserialized);
+        }
+
+        [Theory]
+        [InlineData(' ')]
+        [InlineData('\n')]
+        public void ToJson_DataContract_DoesNotContainUselessWhitespace (
+            char whitespace)
+        {
+            string name = "name";
+            DataContractClass original = new DataContractClass(name);
+
+            string serialized = original.ToJson();
+
+            Assert.DoesNotContain(whitespace, serialized);
+        }
+
+        #endregion
+
+        #region ToJson_Bool
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ToJsonBool_Null_ThrowsException (bool indent)
+        {
+            DataContractClass original = null;
+
+            _ = Assert.Throws<ArgumentNullException>(
+                () => JsonExtensions.ToJson(original, indent));
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ToJsonBool_NonDataContract_ThrowsException (bool indent)
+        {
+            var name = "name";
+            NonDataContractClass original = new NonDataContractClass(name);
+
+            _ = Assert.Throws<InvalidDataContractException>(
+                () => JsonExtensions.ToJson(original, indent));
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ToJsonBool_StringTrue_ReturnsDeserializableString (
+            bool indent)
+        {
+            string original = "name";
+
+            string serialized = original.ToJson(indent);
+            string deserialized = serialized.FromJson<string>();
+
+            Assert.Equal(original, deserialized);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ToJsonBool_DataContract_ReturnsDeserializableString (
+            bool indent)
+        {
+            string name = "name";
+            DataContractClass original = new DataContractClass(name);
+
+            string serialized = original.ToJson(indent);
+            DataContractClass deserialized =
+                serialized.FromJson<DataContractClass>();
+
+            Assert.Equal(original, deserialized);
+        }
+
+        [Theory]
+        [InlineData(' ')]
+        [InlineData('\n')]
+        public void
+            ToJsonBool_DataContractTrue_ContainsWhitespace (
+            char whitespace)
+        {
+            bool indent = true;
+            string name = "name";
+            DataContractClass original = new DataContractClass(name);
+
+            string serialized = original.ToJson(indent);
+
+            Assert.Contains(whitespace, serialized);
+        }
+
+        [Theory]
+        [InlineData(' ')]
+        [InlineData('\n')]
+        public void 
+            ToJsonBool_DataContractFalse_DoesNotContainUselessWhitespace (
+            char whitespace)
+        {
+            bool indent = false;
+            string name = "name";
+            DataContractClass original = new DataContractClass(name);
+
+            string serialized = original.ToJson(indent);
+
+            Assert.DoesNotContain(whitespace, serialized);
         }
 
         #endregion
@@ -120,6 +227,7 @@ namespace jktoiuhito.Utility.UnitTests.Extensions.Json
         public void FromJsonStream_Null_ThrowsException ()
         {
             Stream original = null;
+            
             _ = Assert.Throws<ArgumentNullException>(
                 () => JsonExtensions
                     .FromJson<DataContractClass>(original));
@@ -129,6 +237,7 @@ namespace jktoiuhito.Utility.UnitTests.Extensions.Json
         public void FromJsonStream_Empty_ThrowsException ()
         {
             using Stream original = new MemoryStream();
+            
             _ = Assert.Throws<ArgumentException>(
                 () => JsonExtensions
                     .FromJson<DataContractClass>(original));
@@ -138,6 +247,7 @@ namespace jktoiuhito.Utility.UnitTests.Extensions.Json
         public void FromJsonStream_FilledEmpty_ThrowsException ()
         {
             using Stream original = new MemoryStream(10);
+            
             _ = Assert.Throws<ArgumentException>(
                 () => JsonExtensions
                     .FromJson<DataContractClass>(original));
@@ -149,6 +259,7 @@ namespace jktoiuhito.Utility.UnitTests.Extensions.Json
             string original = "{\"anotherField\":\"value\"}";
             var bytes = Encoding.UTF8.GetBytes(original);
             using Stream stream = new MemoryStream(bytes);
+            
             _ = Assert.Throws<SerializationException>(
                 () => JsonExtensions
                     .FromJson<DataContractClass>(stream));
