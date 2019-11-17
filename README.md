@@ -7,9 +7,9 @@ This is a collection of helper classes and methods I've found to be useful in ot
 
 ## Requirements
 
-.NET Standard 2.0
+Main package: .NET Standard 2.0
 
-Tests require .NET Core 3.0
+Tests: .NET Core 3.0
 
 ## Installation
 
@@ -25,13 +25,13 @@ JSON-related extensions using `System.Runtime.Serialization.Json.DataContractJso
 
 ```csharp
 //Serialize an object to JSON formatted string.
-string jsonString = obj.ToJson();
+string json = obj.ToJson();
 
 //Deserialize an object from JSON formatted string.
-MyDataObject obj = str.FromJson<MyDataObject>();
+MyDataObject obj = jsonString.FromJson<MyDataObject>();
 
 //Deserialize an object from JSON contained in a Stream.
-MyDataObject obj = stream.FromJson<MyDataObject>();
+MyDataObject obj = jsonStream.FromJson<MyDataObject>();
 ```
 
 ### jtkoiuhito.Utility.Extensions.String
