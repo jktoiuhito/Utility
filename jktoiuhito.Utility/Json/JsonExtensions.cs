@@ -1,10 +1,12 @@
 ﻿using System.Runtime.Serialization.Json;
+using jktoiuhito.Utility.IEnumerable;
 using System.Runtime.Serialization;
+using System.Collections.Generic;
 using jktoiuhito.Utility.String;
 using System.IO;
 using System;
 
-//EDITED 2019-11-17
+//EDITED 2019-12-06
 namespace jktoiuhito.Utility.Json
 {
     /// <summary>
@@ -14,6 +16,8 @@ namespace jktoiuhito.Utility.Json
     public static class JsonExtensions
     {
         const string EmptyStreamErrorMessage = "stream cannot be empty";
+        const string KnownTypesNullsErrorMessage = 
+            "known types cannot contain nulls";
 
         /// <summary>
         ///     Convert an <see cref="object"/> to a Json 
@@ -32,8 +36,7 @@ namespace jktoiuhito.Utility.Json
         ///     <paramref name="object"/> is null.
         /// </exception>
         /// <exception cref="InvalidDataContractException">
-        ///     <paramref name="object"/> does not have a
-        ///     <see cref="DataContractAttribute"/>.
+        ///     <paramref name="object"/> has an invalid data contract.
         /// </exception>
         /// <exception cref="OutOfMemoryException">
         ///     //TODO: when is this thrown?
@@ -43,14 +46,7 @@ namespace jktoiuhito.Utility.Json
             if (@object == null)
                 throw new ArgumentNullException();
 
-            using (var stream = new MemoryStream())
-            {
-                var serializer = new DataContractJsonSerializer(typeof(T));
-                serializer.WriteObject(stream, @object);
-                _ = stream.Seek(0, SeekOrigin.Begin);
-                using (var reader = new StreamReader(stream))
-                    return reader.ReadToEnd();
-            }
+            return ToJsonImpl<T>(@object, null, null);
         }
 
         /// <summary>
@@ -73,8 +69,7 @@ namespace jktoiuhito.Utility.Json
         ///     <paramref name="object"/> is null.
         /// </exception>
         /// <exception cref="InvalidDataContractException">
-        ///     <paramref name="object"/> does not have a
-        ///     <see cref="DataContractAttribute"/>.
+        ///     <paramref name="object"/> has an invalid data contract.
         /// </exception>
         /// <exception cref="OutOfMemoryException">
         ///     //TODO: when is this thrown?
@@ -84,22 +79,97 @@ namespace jktoiuhito.Utility.Json
         {
             if (@object == null)
                 throw new ArgumentNullException();
-            if (!indent)
-                return ToJson<T>(@object);
 
-            using (var stream = new MemoryStream())
-            {
-                var encoding = System.Text.Encoding.UTF8;
-                var writer =
-                    JsonReaderWriterFactory
-                    .CreateJsonWriter(stream, encoding, true, indent);
-                var serializer = new DataContractJsonSerializer(typeof(T));
-                serializer.WriteObject(writer, @object);
-                writer.Flush();
-                _ = stream.Seek(0, SeekOrigin.Begin);
-                using (var reader = new StreamReader(stream))
-                    return reader.ReadToEnd();
-            }
+            return ToJsonImpl<T>(
+                @object, indent, null);
+        }
+
+        /// <summary>
+        ///     Convert an <see cref="object"/> to a Json 
+        ///     formatted <see cref="string"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        ///     Type of the <see cref="object"/>.
+        /// </typeparam>
+        /// <param name="object">
+        ///     <see cref="object"/> to convert to Json.
+        /// </param>
+        /// <param name="knownTypes">
+        ///     Types which should be known to the
+        ///     <see cref="DataContractJsonSerializer"/>.
+        /// </param>
+        /// <returns>
+        ///     <see cref="object"/> serialized to Json.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="object"/> is null.
+        ///     <paramref name="knownTypes"/> is null.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="knownTypes"/> is empty or contains nulls.
+        /// </exception>
+        /// <exception cref="InvalidDataContractException">
+        ///     <paramref name="object"/> has an invalid data contract.
+        /// </exception>
+        /// <exception cref="OutOfMemoryException">
+        ///     //TODO: when is this thrown?
+        /// </exception>
+        public static string ToJson<T> (
+            this T @object, IEnumerable<Type> knownTypes) where T : class
+        {
+            if (@object == null)
+                throw new ArgumentNullException();
+
+            return ToJsonImpl<T>(
+                @object,
+                null,
+                knownTypes.NotNullEmptyNulls(nameof(knownTypes)));
+        }
+
+        /// <summary>
+        ///     Convert an <see cref="object"/> to a Json 
+        ///     formatted <see cref="string"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        ///     Type of the <see cref="object"/>.
+        /// </typeparam>
+        /// <param name="object">
+        ///     <see cref="object"/> to convert to Json.
+        /// </param>
+        /// <param name="indent">
+        ///     Should the output string be indented.
+        /// </param>
+        /// <param name="knownTypes">
+        ///     Types which should be known to the
+        ///     <see cref="DataContractJsonSerializer"/>.
+        /// </param>
+        /// <returns>
+        ///     <see cref="object"/> serialized to Json.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     <paramref name="object"/> is null.
+        ///     <paramref name="knownTypes"/> is null.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="knownTypes"/> is empty or contains nulls.
+        /// </exception>
+        /// <exception cref="InvalidDataContractException">
+        ///     <paramref name="object"/> has an invalid data contract.
+        /// </exception>
+        /// <exception cref="OutOfMemoryException">
+        ///     //TODO: when is this thrown?
+        /// </exception>
+        public static string ToJson<T> (
+            this T @object, bool indent, IEnumerable<Type> knownTypes)
+            where T : class
+        {
+            if (@object == null)
+                throw new ArgumentNullException();
+            foreach (var type in knownTypes.NotNullEmpty())
+                if (type == null)
+                    throw new ArgumentException(KnownTypesNullsErrorMessage);
+
+            return ToJsonImpl<T>(@object, indent, knownTypes);
         }
 
         /// <summary>
@@ -167,6 +237,34 @@ namespace jktoiuhito.Utility.Json
             _ = stream.Seek(0, SeekOrigin.Begin);
             var serializer = new DataContractJsonSerializer(typeof(T));
             return (T)serializer.ReadObject(stream);
+        }
+
+        static string ToJsonImpl<T> (
+            T obj, bool? indent, IEnumerable<Type> knownTypes)
+        {
+            var serializer = knownTypes == null
+                ? new DataContractJsonSerializer(typeof(T))
+                : new DataContractJsonSerializer(typeof(T), knownTypes);
+            using (var stream = new MemoryStream())
+            {
+                if (indent == null)
+                {
+                    serializer.WriteObject(stream, obj);
+                }
+                else
+                {
+                    var encoding = System.Text.Encoding.UTF8;
+                    var writer =
+                        JsonReaderWriterFactory
+                        .CreateJsonWriter(
+                            stream, encoding, true, indent.Value);
+                    serializer.WriteObject(writer, obj);
+                    writer.Flush();
+                }
+                _ = stream.Seek(0, SeekOrigin.Begin);
+                using (var reader = new StreamReader(stream))
+                    return reader.ReadToEnd();
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-//EDITED 2019-11-17
+//EDITED 2019-12-04
 namespace jktoiuhito.Utility.String
 {
     /// <summary>

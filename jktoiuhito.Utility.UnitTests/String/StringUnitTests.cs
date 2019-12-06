@@ -5,51 +5,58 @@ using Xunit;
 #pragma warning disable IDE0007 // Use implicit type
 namespace jktoiuhito.Utility.UnitTests.String
 {
-    //EDITED 2019-11-17
+    //EDITED 2019-12-06
     public sealed class StringUnitTests
     {
-        #region NotNullEmptyWhitespace (string)
+        #region NotNullEmptyWhitespace (string, string)
 
-        [Fact]
-        public void NotNullEmptyWhitespace_Null_ThrowsException ()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("local")]
+        public void NotNullEmptyWhitespace_Null_ThrowsException (
+            string localName)
         {
             string input = null;
 
             _ = Assert.Throws<ArgumentNullException>(
-                () => input.NotNullEmptyWhitespace());
+                () => input.NotNullEmptyWhitespace(localName));
         }
 
-        [Fact]
-        public void NotNullEmptyWhitespace_Empty_ThrowsException ()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("local")]
+        public void NotNullEmptyWhitespace_Empty_ThrowsException (
+            string localName)
         {
             string input = "";
 
             _ = Assert.Throws<ArgumentException>(
-                () => input.NotNullEmptyWhitespace());
+                () => input.NotNullEmptyWhitespace(localName));
         }
 
-        [Fact]
-        public void NotNullEmptyWhitespace_Whitespace_ThrowsException ()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("local")]
+        public void NotNullEmptyWhitespace_Whitespace_ThrowsException (
+            string localName)
         {
             string input = "    ";
 
             _ = Assert.Throws<ArgumentException>(
-                () => input.NotNullEmptyWhitespace());
+                () => input.NotNullEmptyWhitespace(localName));
         }
 
-        [Fact]
-        public void NotNullEmptyWhitespace_String_Passes ()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("local")]
+        public void NotNullEmptyWhitespace_String_Passes (string localName)
         {
             string input = "input";
 
-            string output = input.NotNullEmptyWhitespace();
+            string output = input.NotNullEmptyWhitespace(localName);
 
             Assert.Equal(input, output);
         }
-
-        #endregion
-
-        #region NotNullEmptyWhitespace (string, string)
 
         [Fact]
         public void NotNullEmptyWhitespace_NullLocalName_Passes ()

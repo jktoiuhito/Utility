@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using System.Collections.Generic;
 using jktoiuhito.Utility.Json;
 using System.Text;
 using System.IO;
@@ -8,7 +9,7 @@ using Xunit;
 #pragma warning disable IDE0007 // Use implicit type
 namespace jktoiuhito.Utility.UnitTests.Json
 {
-    //EDITED 2019-11-17
+    //EDITED 2019-12-06
     public sealed class JsonExtensionsUnitTests
     {
         #region ToJson
@@ -72,7 +73,7 @@ namespace jktoiuhito.Utility.UnitTests.Json
 
         #endregion
 
-        #region ToJson_Bool
+        #region ToJson (bool)
 
         [Theory]
         [InlineData(true)]
@@ -157,6 +158,270 @@ namespace jktoiuhito.Utility.UnitTests.Json
             string serialized = original.ToJson(indent);
 
             Assert.DoesNotContain(whitespace, serialized);
+        }
+
+        #endregion
+
+        #region ToJson (IEnumerable<Type>)
+
+        [Fact]
+        public void ToJsonEnum_NullObject_ThrowsException ()
+        {
+            DataContractClass original = null;
+            IEnumerable<Type> types = new[]
+            {
+                typeof(string)
+            };
+
+            _ = Assert.Throws<ArgumentNullException>(
+                () => JsonExtensions.ToJson(original, types));
+        }
+
+        [Fact]
+        public void ToJsonEnum_NonDataContract_ThrowsException ()
+        {
+            NonDataContractClass original = new NonDataContractClass("name");
+            IEnumerable<Type> types = new[]
+            {
+                typeof(string)
+            };
+
+            _ = Assert.Throws<InvalidDataContractException>(
+                () => JsonExtensions.ToJson(original, types));
+        }
+
+        [Fact]
+        public void ToJsonEnum_String_ReturnsDeserializableString ()
+        {
+            string original = "name";
+            IEnumerable<Type> types = new[]
+            {
+                typeof(string)
+            };
+
+            string serialized = original.ToJson(types);
+            string deserialized = serialized.FromJson<string>();
+
+            Assert.Equal(original, deserialized);
+        }
+
+        [Fact]
+        public void ToJsonEnum_NullTypes_ThrowsException ()
+        {
+            DataContractClass original = new DataContractClass("name");
+            IEnumerable<Type> types = null;
+
+            _ = Assert.Throws<ArgumentNullException>(
+                () => JsonExtensions.ToJson(original, types));
+        }
+
+        [Fact]
+        public void ToJsonEnum_EmptyTypes_ThrowsException ()
+        {
+            DataContractClass original = new DataContractClass("name");
+            IEnumerable<Type> types = new Type[] { };
+
+            _ = Assert.Throws<ArgumentException>(
+                () => JsonExtensions.ToJson(original, types));
+        }
+
+        [Fact]
+        public void ToJsonEnum_Types_NullValues_ThrowsException ()
+        {
+            DataContractClass original = new DataContractClass("name");
+            IEnumerable<Type> types = new[]
+            {
+                typeof(string),
+                null
+            };
+
+            _ = Assert.Throws<ArgumentException>(
+                () => JsonExtensions.ToJson(original, types));
+        }
+
+        [Fact]
+        public void ToJsonEnum_DataContract_ReturnsDeserializableString ()
+        {
+            DataContractClass original = new DataContractClass("name");
+            IEnumerable<Type> types = new[]
+            {
+                typeof(string)
+            };
+
+            string serialized = original.ToJson(types);
+            DataContractClass deserialized =
+                serialized.FromJson<DataContractClass>();
+
+            Assert.Equal(original, deserialized);
+        }
+
+        [Theory]
+        [InlineData(' ')]
+        [InlineData('\n')]
+        public void ToJsonEnum_DataContract_DoesNotContainUselessWhitespace (
+            char whitespace)
+        {
+            string name = "name";
+            DataContractClass original = new DataContractClass(name);
+            IEnumerable<Type> types = new[]
+            {
+                typeof(string)
+            };
+
+            string serialized = original.ToJson(types);
+
+            Assert.DoesNotContain(whitespace, serialized);
+        }
+
+        #endregion
+
+        #region ToJson (bool, IEnumerable<Type>)
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ToJsonBoolEnum_NullObject_ThrowsException (bool indent)
+        {
+            DataContractClass original = null;
+            IEnumerable<Type> types = new[]
+            {
+                typeof(string)
+            };
+
+            _ = Assert.Throws<ArgumentNullException>(
+                () => JsonExtensions.ToJson(original, indent, types));
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ToJsonBoolEnum_NonDataContract_ThrowsException (
+            bool indent)
+        {
+            NonDataContractClass original = new NonDataContractClass("name");
+            IEnumerable<Type> types = new[]
+            {
+                typeof(string)
+            };
+
+            _ = Assert.Throws<InvalidDataContractException>(
+                () => JsonExtensions.ToJson(original, indent, types));
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ToJsonBoolEnum_String_ReturnsDeserializableString (
+            bool indent)
+        {
+            string original = "name";
+            IEnumerable<Type> types = new[]
+            {
+                typeof(string)
+            };
+
+            string serialized = original.ToJson(indent, types);
+            string deserialized = serialized.FromJson<string>();
+
+            Assert.Equal(original, deserialized);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ToJsonBoolEnum_NullTypes_ThrowsException (bool indent)
+        {
+            DataContractClass original = new DataContractClass("name"); ;
+            IEnumerable<Type> types = null;
+
+            _ = Assert.Throws<ArgumentNullException>(
+                () => JsonExtensions.ToJson(original, indent, types));
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ToJsonBoolEnum_EmptyTypes_ThrowsException (bool indent)
+        {
+            DataContractClass original = new DataContractClass("name");
+            IEnumerable<Type> types = new Type[] { };
+
+            _ = Assert.Throws<ArgumentException>(
+                () => JsonExtensions.ToJson(original, indent, types));
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ToJsonBoolEnum_Types_NullValues_ThrowsException (
+            bool indent)
+        {
+            DataContractClass original = new DataContractClass("name"); ;
+            IEnumerable<Type> types = new[]
+            {
+                typeof(string),
+                null
+            };
+
+            _ = Assert.Throws<ArgumentException>(
+                () => JsonExtensions.ToJson(original, indent, types));
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ToJsonBoolEnum_DataContract_ReturnsDeserializableString (
+            bool indent)
+        {
+            DataContractClass original = new DataContractClass("name");
+            IEnumerable<Type> types = new[]
+            {
+                typeof(string)
+            };
+
+            string serialized = original.ToJson(indent, types);
+            DataContractClass deserialized =
+                serialized.FromJson<DataContractClass>();
+
+            Assert.Equal(original, deserialized);
+        }
+
+        //indent
+
+        [Theory]
+        [InlineData(' ')]
+        [InlineData('\n')]
+        public void 
+            ToJsonEnum_FalseDataContract_DoesNotContainUselessWhitespace (
+            char whitespace)
+        {
+            DataContractClass original = new DataContractClass("name");
+            IEnumerable<Type> types = new[]
+            {
+                typeof(string)
+            };
+
+            string serialized = original.ToJson(false, types);
+
+            Assert.DoesNotContain(whitespace, serialized);
+        }
+
+
+        [Theory]
+        [InlineData(' ')]
+        [InlineData('\n')]
+        public void ToJsonEnum_TrueDataContract_ContainWhitespace (
+            char whitespace)
+        {
+            DataContractClass original = new DataContractClass("name");
+            IEnumerable<Type> types = new[]
+            {
+                typeof(string)
+            };
+
+            string serialized = original.ToJson(true, types);
+
+            Assert.Contains(whitespace, serialized);
         }
 
         #endregion
