@@ -1,0 +1,78 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ assembly name="System.Core" #>
+<# string[] types = new[] {
+    "sbyte", "short", "int", "long"
+    };
+#>
+<# string[] utypes = new[] {
+    "byte", "ushort", "uint", "ulong"
+    };
+#>
+using jktoiuhito.Utility.String;
+using System;
+
+/*
+ * This file was automatically generated <#= DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") #> UTC time.
+ * All manual changes will be lost.
+ */
+
+namespace jktoiuhito.Utility.Numbers
+{
+    /// <summary>
+    /// Extension methods related to numbers.
+    /// </summary>
+    public static class Numbers
+    {
+    <# foreach (var type in types) { 
+    #>
+        /// <summary>
+        /// Returns the input <see cref="<#= type #>"/> if it is not zero.
+        /// Otherwise throws an exception.
+        /// </summary>
+        /// <param name="number">Input <see cref="<#= type #>"/>.</param>
+        /// <param name="localname">Name of the variable in local context.</param>
+        /// <returns>Input <see cref="<#= type #>"/></returns>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="number"/> is zero.
+        ///     <paramref name="localname"/> is empty or whitespace.
+        /// </exception>
+        public static <#= type #> NotZero (this <#= type #> number, string localname = null)
+        {
+            if (localname != null)
+                localname = localname.NotNullEmptyWhitespace(nameof(localname));
+            if (number == 0)
+                throw localname == null
+                    ? new ArgumentException("number cannot be zero")
+                    : new ArgumentException("number cannot be zero", localname);
+            return number;
+        }
+    <#
+    } #>
+    <# foreach (var type in utypes) { 
+    #>
+        /// <summary>
+        /// Returns the input <see cref="<#= type #>"/> if it is not zero.
+        /// Otherwise throws an exception.
+        /// </summary>
+        /// <param name="number">Input <see cref="<#= type #>"/>.</param>
+        /// <param name="localname">Name of the variable in local context.</param>
+        /// <returns>Input <see cref="<#= type #>"/></returns>
+        /// <exception cref="ArgumentException">
+        ///     <paramref name="number"/> is zero.
+        ///     <paramref name="localname"/> is empty or whitespace.
+        /// </exception>
+        public static <#= type #> NotZero (this <#= type #> number, string localname = null)
+        {
+            if (localname != null)
+                localname = localname.NotNullEmptyWhitespace(nameof(localname));
+            if (number == 0)
+                throw localname == null
+                    ? new ArgumentException("number cannot be zero")
+                    : new ArgumentException("number cannot be zero", localname);
+            return number;
+        }
+    <#
+    } #>
+    }
+}

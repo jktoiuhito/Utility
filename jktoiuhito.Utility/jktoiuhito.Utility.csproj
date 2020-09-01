@@ -2,18 +2,45 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <Version>3.1.0</Version>
-    <PackageReleaseNotes>Added option to include known types to object.ToJson. Added IEnumerable.NotNullEmptyNulls. Improved documentation.</PackageReleaseNotes>
+    <Version>3.2.1</Version>
+    <PackageReleaseNotes>Updated project and repository URL's</PackageReleaseNotes>
     <Authors>jktoiuhito</Authors>
     <Description>A Swiss Army Knife package of helper classes and methods found to be useful in a multitude of projects</Description>
     <Copyright>Public domain</Copyright>
-    <PackageTags>Helper;Extension;String;Json;HATEOAS,IEnumerable</PackageTags>
-    <PackageProjectUrl>https://github.com/jktoiuhito/jktoiuhito.Utility</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/jktoiuhito/jktoiuhito.Utility</RepositoryUrl>
+    <PackageTags>Helper;Extension;String;Json;HATEOAS,IEnumerable;Numbers</PackageTags>
+    <PackageProjectUrl>https://github.com/jktoiuhito/Utility</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jktoiuhito/Utility</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Numbers\Numbers.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Numbers.tt</DependentUpon>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Numbers\Numbers.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Numbers.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Numbers\Numbers.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Numbers.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
 
 </Project>

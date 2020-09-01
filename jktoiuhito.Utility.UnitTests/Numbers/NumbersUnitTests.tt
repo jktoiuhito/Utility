@@ -1,0 +1,127 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ assembly name="System.Core" #>
+<# string[] types = new[] {
+    "sbyte", "short", "int", "long"
+    };
+#>
+<# string[] utypes = new[] {
+    "byte", "ushort", "uint", "ulong"
+    };
+#>
+using jktoiuhito.Utility.Numbers;
+using Xunit;
+using System;
+
+/*
+ * This file was automatically generated <#= DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") #> UTC time.
+ * All manual changes will be lost.
+ */
+
+namespace jktoiuhito.Utility.UnitTests.Numbers
+{
+    public class NumbersUnitTests
+    {
+        <# foreach (var type in types) { 
+        #>
+            [Theory]
+            [InlineData(-1, "")]
+            [InlineData(-1, " ")]
+            [InlineData(-1, "　")]
+            [InlineData(-1, "	")]
+            [InlineData(0, "")]
+            [InlineData(0, " ")]
+            [InlineData(0, "　")]
+            [InlineData(0, "	")]
+            [InlineData(1, "")]
+            [InlineData(1, " ")]
+            [InlineData(1, "　")]
+            [InlineData(1, "	")]
+            public void <#= type #>NotZero_EmptyWhitespaceLocalname_ThrowsException (
+                <#= type #> number, string localname)
+            {
+                Assert.Throws<ArgumentException>(
+                    () => number.NotZero(localname));
+            }
+            
+            [Theory]
+            [InlineData(null)]
+            [InlineData("name")]
+            public void <#= type #>NotZero_Negative_ReturnsInput (string localname)
+            {
+                <#= type #> number = -1;
+    
+                var result = number.NotZero(localname);
+    
+                Assert.Equal(number, result);
+            }
+    
+            [Theory]
+            [InlineData(null)]
+            [InlineData("name")]
+            public void <#= type #>NotZero_Positive_ReturnsInput (string localname)
+            {
+                <#= type #> number = 1;
+    
+                var result = number.NotZero(localname);
+    
+                Assert.Equal(number, result);
+            }
+    
+            [Theory]
+            [InlineData(null)]
+            [InlineData("name")]
+            public void <#= type #>NotZero_Zero_ThrowsException (string localname)
+            {
+                <#= type #> number = 0;
+    
+                Assert.Throws<ArgumentException>(
+                    () => number.NotZero(localname));
+            }
+        <#
+        } #>
+    
+        <# foreach (var type in utypes) { 
+        #>
+            [Theory]
+            [InlineData(0, "")]
+            [InlineData(0, " ")]
+            [InlineData(0, "　")]
+            [InlineData(0, "	")]
+            [InlineData(1, "")]
+            [InlineData(1, " ")]
+            [InlineData(1, "　")]
+            [InlineData(1, "	")]
+            public void <#= type #>NotZero_EmptyWhitespaceLocalname_ThrowsException (
+                <#= type #> number, string localname)
+            {
+                Assert.Throws<ArgumentException>(
+                    () => number.NotZero(localname));
+            }
+    
+            [Theory]
+            [InlineData(null)]
+            [InlineData("name")]
+            public void <#= type #>NotZero_Positive_ReturnsInput (string localname)
+            {
+                <#= type #> number = 1;
+    
+                var result = number.NotZero(localname);
+    
+                Assert.Equal(number, result);
+            }
+    
+            [Theory]
+            [InlineData(null)]
+            [InlineData("name")]
+            public void <#= type #>NotZero_Zero_ThrowsException (string localname)
+            {
+                <#= type #> number = 0;
+    
+                Assert.Throws<ArgumentException>(
+                    () => number.NotZero(localname));
+            }
+        <#
+        } #>
+    }
+}
