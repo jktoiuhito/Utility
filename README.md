@@ -3,7 +3,7 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/jktoiuhito/utility/badge)](https://www.codefactor.io/repository/github/jktoiuhito/utility)
 [![Nuget](https://img.shields.io/nuget/v/jktoiuhito.Utility)](https://www.nuget.org/packages/jktoiuhito.Utility/)
 
-This is a collection of helper classes and methods I've found to be useful in other projects.
+This is a collection of helper classes and methods I've found to be useful in .NET-based projects.
 
 ## Requirements
 
