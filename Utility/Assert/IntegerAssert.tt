@@ -9,7 +9,7 @@
     "byte", "ushort", "uint", "ulong"
     };
 #>
-using jktoiuhito.Utility.String;
+using jktoiuhito.Utility.Assert;
 using System;
 
 /*
@@ -17,30 +17,35 @@ using System;
  * All manual changes will be lost.
  */
 
-namespace jktoiuhito.Utility.Numbers
+namespace jktoiuhito.Utility.Assert
 {
     /// <summary>
-    /// Extension methods related to numbers.
+    /// Assertion extension methods related to integers.
     /// </summary>
-    public static class Numbers
+    public static class IntegerAssert
     {
     <# foreach (var type in types) { 
     #>
         /// <summary>
         /// Returns the input <see cref="<#= type #>"/> if it is not zero.
-        /// Otherwise throws an exception.
+        /// Otherwise throws an <see cref="ArgumentException"/>.
         /// </summary>
-        /// <param name="number">Input <see cref="<#= type #>"/>.</param>
-        /// <param name="localname">Name of the variable in local context.</param>
-        /// <returns>Input <see cref="<#= type #>"/></returns>
+        /// <param name="number">
+        ///     Input <see cref="<#= type #>"/> to check for zeroness.
+        /// </param>
+        /// <param name="localname">
+        ///     Name of the <see cref="<#= type #>"/>s local variable,
+        ///     parameter etc.
+        /// </param>
+        /// <returns>Thei input <see cref="<#= type #>"/></returns>
         /// <exception cref="ArgumentException">
         ///     <paramref name="number"/> is zero.
         ///     <paramref name="localname"/> is empty or whitespace.
         /// </exception>
-        public static <#= type #> NotZero (this <#= type #> number, string localname = null)
+        public static <#= type #> NotZero (this <#= type #> number, string? localname = null)
         {
             if (localname != null)
-                localname = localname.NotNullEmptyWhitespace(nameof(localname));
+                localname = localname.NotEmptyWhitespace(nameof(localname));
             if (number == 0)
                 throw localname == null
                     ? new ArgumentException("number cannot be zero")
@@ -53,19 +58,24 @@ namespace jktoiuhito.Utility.Numbers
     #>
         /// <summary>
         /// Returns the input <see cref="<#= type #>"/> if it is not zero.
-        /// Otherwise throws an exception.
+        /// Otherwise throws an <see cref="ArgumentException"/>.
         /// </summary>
-        /// <param name="number">Input <see cref="<#= type #>"/>.</param>
-        /// <param name="localname">Name of the variable in local context.</param>
-        /// <returns>Input <see cref="<#= type #>"/></returns>
+        /// <param name="number">
+        ///     Input <see cref="<#= type #>"/> to check for zeroness.
+        /// </param>
+        /// <param name="localname">
+        ///     Name of the <see cref="<#= type #>"/>s local variable,
+        ///     parameter etc.
+        /// </param>
+        /// <returns>The input <see cref="<#= type #>"/></returns>
         /// <exception cref="ArgumentException">
         ///     <paramref name="number"/> is zero.
         ///     <paramref name="localname"/> is empty or whitespace.
         /// </exception>
-        public static <#= type #> NotZero (this <#= type #> number, string localname = null)
+        public static <#= type #> NotZero (this <#= type #> number, string? localname = null)
         {
             if (localname != null)
-                localname = localname.NotNullEmptyWhitespace(nameof(localname));
+                localname = localname.NotEmptyWhitespace(nameof(localname));
             if (number == 0)
                 throw localname == null
                     ? new ArgumentException("number cannot be zero")

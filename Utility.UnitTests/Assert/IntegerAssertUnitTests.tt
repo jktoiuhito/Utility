@@ -9,7 +9,7 @@
     "byte", "ushort", "uint", "ulong"
     };
 #>
-using jktoiuhito.Utility.Numbers;
+using jktoiuhito.Utility.Assert;
 using Xunit;
 using System;
 

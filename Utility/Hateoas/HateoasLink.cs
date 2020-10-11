@@ -1,5 +1,5 @@
 ﻿using System.Runtime.Serialization;
-using jktoiuhito.Utility.String;
+using jktoiuhito.Utility.Assert;
 using System;
 
 //EDITED 2019-11-17
@@ -86,7 +86,7 @@ namespace jktoiuhito.Utility.Hateoas
         public HateoasLink (Uri href, string rel)
         {
             Href = href ?? throw new ArgumentNullException(nameof(href));
-            Rel = rel.NotNullEmptyWhitespace(nameof(rel));
+            Rel = rel.NotEmptyWhitespace(nameof(rel));
         }
 
         /// <summary>

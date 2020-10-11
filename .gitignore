@@ -1,6 +1,7 @@
 .vs
-*.user
 bin
 obj
-launchSettings.json
+wiki
 .editorconfig
+launchSettings.json
+*.user

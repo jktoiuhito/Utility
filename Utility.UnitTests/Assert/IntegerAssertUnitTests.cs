@@ -1,9 +1,9 @@
-﻿using jktoiuhito.Utility.Numbers;
+﻿using jktoiuhito.Utility.Assert;
 using Xunit;
 using System;
 
 /*
- * This file was automatically generated 2020/09/01 12:19:08 UTC time.
+ * This file was automatically generated 2020/10/10 15:58:06 UTC time.
  * All manual changes will be lost.
  */
 

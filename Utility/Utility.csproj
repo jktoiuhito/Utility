@@ -1,33 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <Version>3.2.1</Version>
-    <PackageReleaseNotes>Updated project and repository URL's</PackageReleaseNotes>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+    <Version>4.0.0</Version>
+    <PackageReleaseNotes>Breaking changes: update target framework from .NET Standard 2.0 to 2.1, combine String, Number and IEnumerable namespaces to Assert namespace, rename Json namespace to Serialize.</PackageReleaseNotes>
     <Authors>jktoiuhito</Authors>
     <Description>A Swiss Army Knife package of helper classes and methods found to be useful in a multitude of projects</Description>
     <Copyright>Public domain</Copyright>
-    <PackageTags>Helper;Extension;String;Json;HATEOAS,IEnumerable;Numbers</PackageTags>
+    <PackageTags>Helper;Extensions;Assertations;Json;HATEOAS</PackageTags>
     <PackageProjectUrl>https://github.com/jktoiuhito/Utility</PackageProjectUrl>
     <RepositoryUrl>https://github.com/jktoiuhito/Utility</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Numbers\Numbers.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Numbers.tt</DependentUpon>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Numbers\Numbers.tt">
+    <None Update="Assert\IntegerAssert.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Numbers.cs</LastGenOutput>
+      <LastGenOutput>IntegerAssert.cs</LastGenOutput>
     </None>
   </ItemGroup>
 
@@ -36,10 +29,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Numbers\Numbers.cs">
+    <Compile Update="Assert\IntegerAssert.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Numbers.tt</DependentUpon>
+      <DependentUpon>IntegerAssert.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 
